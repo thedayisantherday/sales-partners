@@ -1,0 +1,8 @@
+.router-fadeIn-enter, .router-fadeIn-leave-active  {
+  transition: transform .3s ease;
+  transform: translateX(-100%);
+}
+.router-fadeBack-enter, .router-fadeBack-leave-active {
+  transition: transform .3s ease-in-out;
+  transform: translateX(100%);
+}
