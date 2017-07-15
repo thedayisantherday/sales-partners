@@ -42,7 +42,8 @@
           user_name: this.userName,
           user_password: this.pwd,
           user_language: 'ZHS',
-          is_ipad: 'N'
+          is_ipad: 'N',
+          is_mobile: 'Y'
         }
         new Login(params).setSelf(this).start(function (response) {
           console.log(response.data)
