@@ -6,7 +6,7 @@
                     v-model="itemValues.order_category" :placeholder="itemPlaceholder"></popup-picker>
       <popup-picker :title="'订单类型'" :data="itemDatas.order_type" cancelText="取消" confirmText="确定"
                     v-model="itemValues.order_type" :placeholder="itemPlaceholder"></popup-picker>
-      <custom-datetime-picker :title="'时间'" format="YYYY-MM-DD HH:mm" v-model="itemValues.time"
+      <custom-datetime-picker :title="'时间'" format="YYYY-MM-DD HH:mm" v-model="itemValues.input_time"
                               :placeholder="itemPlaceholder"></custom-datetime-picker>
       <div class="order-item">
         <span class="order-item-title">客户姓名</span>
@@ -25,29 +25,23 @@
         <input type="text" class="order-item-content" v-model="itemValues.result_ds">
       </div>
       <div class="order-item">
-        <span class="order-item-title">审核状态</span>
-        <input type="text" class="order-item-content" v-model="itemValues.auditState">
-      </div>
-      <div class="order-item">
-        <span class="order-item-title">订单总金额 </span>
-        <input type="text" class="order-item-content" v-model="itemValues.totalAmount">
-      </div>
-      <div class="order-item">
         <span class="order-item-title">已收金额</span>
-        <input type="text" class="order-item-content" v-model="itemValues.down_payment">
+        <input type="number" class="order-item-content" v-model="itemValues.down_payment">
       </div>
       <div class="order-item">
         <span class="order-item-title">待收金额</span>
-        <input type="text" class="order-item-content" v-model="itemValues.amount">
+        <input type="number" class="order-item-content" v-model="itemValues.amount">
+      </div>
+      <div class="order-item">
+        <span class="order-item-title">订单总金额 </span>
+        <span class="order-item-content">{{Number(itemValues.amount) + Number(itemValues.down_payment)}}</span>
       </div>
       <div class="order-item">
         <span class="order-item-title">货量</span>
-        <input type="text" class="order-item-content" v-model="itemValues.result_ds.order_quantity">
+        <input type="number" class="order-item-content" v-model="itemValues.result_ds.order_quantity">
       </div>
-      <div class="order-item">
-        <span class="order-item-title">付款方式</span>
-        <input type="text" class="order-item-content" v-model="itemValues.receive_type">
-      </div>
+      <popup-picker :title="'付款方式'" :data="itemDatas.receive_type" cancelText="取消" confirmText="确定"
+                    v-model="itemValues.receive_type" :placeholder="itemPlaceholder"></popup-picker>
       <div class="order-item">
         <span class="order-item-title">付款账号</span>
         <input type="text" class="order-item-content" v-model="itemValues.receive_account">
@@ -60,14 +54,8 @@
         <span class="order-item-title">订单状态</span>
         <input type="text" class="order-item-content" v-model="itemValues.order_state">
       </div>
-      <div class="order-item">
-        <span class="order-item-title">快递公司</span>
-        <input type="text" class="order-item-content" v-model="itemValues.express_type">
-      </div>
-      <div class="order-item">
-        <span class="order-item-title">快递单号</span>
-        <input type="text" class="order-item-content" v-model="itemValues.express_number">
-      </div>
+      <popup-picker :title="'快递公司'" :data="itemDatas.express_type" cancelText="取消" confirmText="确定"
+                    v-model="itemValues.express_type" :placeholder="itemPlaceholder"></popup-picker>
       <div class="order-item">
         <span class="order-item-title">备注</span>
         <input type="text" class="order-item-content" v-model="itemValues.reference">
@@ -83,9 +71,10 @@
   import CustomDatetimePicker from '../vux/src/components/datetime-picker/custome-datetime-picker.vue'
   import PopupPicker from '../vux/src/components/popup-picker/customer-popup-picker.vue'
   import StringUtil from '../../utils/stringUtil'
-  import {OrderEdit} from '../../net/orderEdit/OrderEditApi'
+  import {GetSysCodeValue, OrderEdit} from '../../net/orderEdit/OrderEditApi'
   Vue.use(AlertPlugin)
 
+  const VALUE_CODE = ['YWX_ORDER_CATEGORY', 'YWX_ORDER_TYPE', 'YWX_RECEIVE_TYPE', 'YWX_EXPRESS_COMPANY']
   export default {
     name: 'orderEdit',
     components: {
@@ -96,10 +85,11 @@
     data () {
       let self = this
       return {
-        showAlert: true,
         itemDatas: {
-          order_category: [['小米1222222222222', 'iPhone', '华为', '情怀', '三星', '其他']],
-          order_type: [['平安', '太平']]
+          order_category: [[]],
+          order_type: [[]],
+          receive_type: [[]],
+          express_type: [[]]
         },
         itemValues: {
           order_id: '', // 订单ID（新增时为空，更新时必须传）
@@ -112,16 +102,14 @@
           city: '', // 市
           district: '', // 所在区
           customer_address: '', // 详细地址
-          auditState: '', // 审核状态
           totalAmount: '',
-          down_payment: '', // 已付金额
-          amount: '', // 待付金额
-          receive_type: '', // 收款方式
+          down_payment: null, // 已付金额
+          amount: null, // 待付金额
+          receive_type: [], // 收款方式
           receive_account: '', // 收款账户
           weixin_operator_num: '', // 微信开单号
           order_state: '', // 订单状态
-          express_type: '', // 快递公司
-          express_number: '', // 快递单号
+          express_type: [], // 快递公司
           reference: '', // 备注
           result_ds: {
             product_id: '', // 产品ID
@@ -146,9 +134,47 @@
         }
       }
     },
+    mounted () {
+      let self = this
+      this.$nextTick(() => {
+        for (var i = 0; i < VALUE_CODE.length; i++) {
+          let params = {
+            code: VALUE_CODE[i]
+          }
+          new GetSysCodeValue(params).setSelf(self).start(function (response) {
+            if (response.data.success && response.data.result && response.data.result.record) {
+              let datas = [[]]
+              for (let i = 0; i < response.data.result.record.length; i++) {
+                datas[0][i] = response.data.result.record[i].code_value_name
+              }
+              switch (params.code) {
+                case VALUE_CODE[0]:
+                  self.itemDatas.order_category = datas
+                  break
+                case VALUE_CODE[1]:
+                  self.itemDatas.order_type = datas
+                  break
+                case VALUE_CODE[2]:
+                  self.itemDatas.receive_type = datas
+                  break
+                case VALUE_CODE[3]:
+                  self.itemDatas.express_type = datas
+                  break
+                default:
+                  console.log('default')
+                  break
+              }
+            }
+            console.log(params)
+            console.log(response)
+          })
+        }
+      })
+    },
     methods: {
       saveOrder () {
         console.log('saveOrder')
+        let self = this
         if (this.checkItemValue()) {
           let params = {
             order_id: '-1',
@@ -157,7 +183,7 @@
             order_type: this.itemValues.order_type,
             receive_type: this.itemValues.receive_type,
             weixin_operator_num: this.itemValues.weixin_operator_num,
-            input_time: Date.now(),
+            input_time: this.itemValues.input_time,
             customer_name: this.itemValues.customer_name,
             customer_phone: this.itemValues.customer_phone,
             province: this.itemValues.province,
@@ -206,10 +232,6 @@
           StringUtil.isEmpty(this.itemValues.province) ||
           StringUtil.isEmpty(this.itemValues.customer_address)) {
           this.showAlert('请输入客户地址')
-          return false
-        }
-        if (StringUtil.isEmpty(this.itemValues.auditState)) {
-          this.showAlert('请输入审核状态')
           return false
         }
         if (StringUtil.isEmpty(this.itemValues.result_ds.product_id)) {

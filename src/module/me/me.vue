@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <transition :name="state ? 'router-fadeIn' : 'router-fadeBack'" mode="out-in">
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </transition>
   </div>
 </template>

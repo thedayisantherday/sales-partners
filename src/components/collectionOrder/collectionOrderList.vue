@@ -15,7 +15,7 @@
   import topTitle from '../common/topTitle.vue'
   import ordersTitle from '../common/ordersTitle.vue'
   import orderItem from '../common/orderItem.vue'
-  import {GetOrderList} from '../../net/orderEdit/GetOrderList'
+  import {GetOrderListApi} from '../../net/orderEdit/GetOrderListApi'
   import StringUtil from '../../utils/stringUtil'
   export default {
     name: 'collectionOrderList',
@@ -66,7 +66,7 @@
           _autocount: 'true',
           order_category: '03'
         }
-        new GetOrderList(params).setSelf(self).start(function (response) {
+        new GetOrderListApi(params).setSelf(self).start(function (response) {
           console.log(self.pagenum)
 //          console.log(response.data)
           if (response.data.success) {

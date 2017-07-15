@@ -46,6 +46,7 @@
 .order-item-content {
   width: 66%;
   height: 0.28rem;
+  padding-left: 0.1rem;
   color: #1e1e1e;
   appearance: none;
   -webkit-appearance: none;

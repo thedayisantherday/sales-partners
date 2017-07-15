@@ -6,7 +6,7 @@
       </div>
       <div class="customer-popup-picker-value">
         <div style="display: inline-block; margin-top: 0.1rem">
-          <span class="customer-popup-picker-value-1" v-if="!displayFormat && !showName && value.length">{{ _value }}</span>
+          <span class="customer-popup-picker-value-1" v-if="!displayFormat && value.length">{{ _value }}</span>
         </div>
         <img src="../../icons/arrow_button.png"
              class="customer-popup-picker-img"/>

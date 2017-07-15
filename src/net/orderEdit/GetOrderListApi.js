@@ -4,9 +4,9 @@
 import BaseRequest from '../baseRequest'
 import WebUrl from '../../constants/WebUrls'
 
-class GetOrderList extends BaseRequest {
+class GetOrderListApi extends BaseRequest {
   requestUrl () {
     return WebUrl.GETORDERLIST
   }
 }
-export {GetOrderList}
+export {GetOrderListApi}

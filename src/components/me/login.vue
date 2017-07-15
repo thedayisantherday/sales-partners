@@ -37,7 +37,7 @@
     },
     methods: {
       handleBtnClick () {
-//        let self = this
+        let self = this
         let params = {
           user_name: this.userName,
           user_password: this.pwd,
@@ -47,9 +47,10 @@
         }
         new Login(params).setSelf(this).start(function (response) {
           console.log(response.data)
-//          self.$router.push({name: 'paidOrderList'})
           // 跳转登录
-          window.location.href = '/app/homePage/homePage.html'
+          self.$router.back() // 直接进入登录模块而不是跳转到登录模块时，有问题
+//          self.$router.push({name: 'paidOrderList'})
+//          window.location.href = '/app/homePage/homePage.html' // 直接进到登录页不会有问题，但是不过从哪个页面跳转，最后都回到同一个页面
         }, function (response) {
           // 这里是处理错误的回调
           console.log(response)
