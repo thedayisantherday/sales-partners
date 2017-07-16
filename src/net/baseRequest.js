@@ -30,6 +30,8 @@ class BaseRequest {
     }, function (response) {
       console.log('error')
       failCallBack(response)
+    }).catch(function (err) {
+      console.log(err)
     })
   }
   setSelf (self) {

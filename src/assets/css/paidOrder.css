@@ -24,6 +24,9 @@
   top: 0.4rem;
   left: 0;
 }
+.order-edit-picker{
+  border-bottom: #e8e8e8;
+}
 .order-item {
   background-color: #fff;
   width: 100%;
@@ -52,6 +55,17 @@
   -webkit-appearance: none;
   border: none;
   background: none;
+}
+.product {
+  height: 1rem;
+}
+.product-detail {
+  overflow: auto;
+  width: 96%;
+  height: 0.5rem;
+  margin: 0.05rem 2%;
+  border: solid 1px #ccc;
+  border-radius: 5px;
 }
 .order-datetime {
   display: inline-block;

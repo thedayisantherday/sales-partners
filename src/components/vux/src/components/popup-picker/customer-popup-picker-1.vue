@@ -25,13 +25,20 @@
             <div class="vux-popup-picker-header-menu-title">{{pickerTitle}}</div>
             <div class="vux-popup-picker-header-menu vux-popup-picker-header-menu-right" @click="onHide(true)">{{confirmText}}</div>
           </div>
-          <picker
+          <flexbox>
+            <flexbox-item v-for="(column, columnIndex) in data">
+              <div v-if="columnIndex <= columnNo">
+                <p  v-for="(row, rowIndex) in column" @click="rowClick(columnIndex, rowIndex)">{{row.name}}</p>
+              </div>
+            </flexbox-item>
+          </flexbox>
+          <!--<picker
             :data="data"
             v-model="tempValue"
             @on-change="onPickerChange"
             :columns="columns"
             :fixed-columns="fixedColumns"
-            :container="'#vux-popup-picker-'+uuid"></picker>
+            :container="'#vux-popup-picker-'+uuid"></picker>-->
         </div>
       </popup>
     </div>
@@ -121,7 +128,8 @@
       isTransferDom: {
         type: Boolean,
         default: true
-      }
+      },
+      rowItemClick: Function
     },
     methods: {
       value2name,
@@ -164,6 +172,15 @@
           }
         }
         this.$emit('on-shadow-change', getObject(val))
+      },
+      rowClick (columnIndex, rowIndex) {
+        if (this.data && this.data.length) {
+          this.columnNo = this.columnNo < this.data.length ? columnIndex + 1 : columnIndex
+        }
+        this.rowNo = rowIndex
+        if (this.rowItemClick) {
+          this.rowItemClick(columnIndex, rowIndex)
+        }
       }
     },
     watch: {
@@ -187,7 +204,9 @@
         closeType: false,
         currentData: JSON.stringify(this.data), // used for detecting if it is after data change
         showValue: false,
-        currentValue: this.value
+        currentValue: this.value,
+        columnNo: 0,
+        rowNo: 0
       }
     }
   }

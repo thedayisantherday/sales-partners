@@ -9,7 +9,8 @@ const WebUrl = {
   // 获取值接口
   GETCODE: '/autocrud/sys.sys_code_values_v/query',
   // 保存订单接口
-  SAVE_ORDER: '/modules/ywx/order/ywx_order_update.svc'
+  SAVE_ORDER: '/modules/ywx/order/ywx_order_update.svc',
+  GET_PRODUCT: '/autocrud/ywx.product.mobile_ywx_product/query'
 }
 
 export default WebUrl

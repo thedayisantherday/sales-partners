@@ -14,4 +14,9 @@ class GetSysCodeValue extends BaseRequest {
     return WebUrl.GETCODE
   }
 }
-export {OrderEdit, GetSysCodeValue}
+class GetProduct extends BaseRequest {
+  requestUrl () {
+    return WebUrl.GET_PRODUCT
+  }
+}
+export {OrderEdit, GetSysCodeValue, GetProduct}

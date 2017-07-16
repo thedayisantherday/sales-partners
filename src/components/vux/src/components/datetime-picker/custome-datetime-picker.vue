@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-popup-picker">
+  <div :class="isShowBottomLine ? 'customer-popup-picker' : 'customer-popup-picker-1'">
       <div class="customer-popup-picker-title">
         <label v-if="title" v-html="title"></label>
         <inline-desc v-if="inlineDesc">{{inlineDesc}}</inline-desc>
@@ -52,6 +52,10 @@
         default: '取消'
       },
       clearText: String,
+      isShowBottomLine: {
+        type: Boolean,
+        default: true
+      },
       yearRow: {
         type: String,
         default: '{value}'
@@ -212,6 +216,9 @@
   .customer-popup-picker {
     width: 100%;
     border-bottom: 1px solid #e8e8e8;
+  }
+  .customer-popup-picker-1 {
+    width: 100%;
   }
   .customer-popup-picker-title {
     display: inline-block;

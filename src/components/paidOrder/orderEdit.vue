@@ -2,27 +2,40 @@
   <div class="content">
     <top-title :titleProps="topTitleProps"></top-title>
     <div class="order-edit-body">
-      <popup-picker :title="'订单类别'" :data="itemDatas.order_category" cancelText="取消" confirmText="确定"
+      <popup-picker class="order-edit-picker" :title="'订单类别'" :data="itemDatas.order_category" cancelText="取消" confirmText="确定"
                     v-model="itemValues.order_category" :placeholder="itemPlaceholder"></popup-picker>
       <popup-picker :title="'订单类型'" :data="itemDatas.order_type" cancelText="取消" confirmText="确定"
                     v-model="itemValues.order_type" :placeholder="itemPlaceholder"></popup-picker>
       <custom-datetime-picker :title="'时间'" format="YYYY-MM-DD HH:mm" v-model="itemValues.input_time"
                               :placeholder="itemPlaceholder"></custom-datetime-picker>
       <div class="order-item">
+        <span class="order-item-title">订单数量</span>
+        <input type="number" class="order-item-content" v-model="itemValues.result_ds.order_quantity">
+      </div>
+      <div class="order-item">
         <span class="order-item-title">客户姓名</span>
         <input type="text" class="order-item-content" v-model="itemValues.customer_name">
       </div>
       <div class="order-item">
         <span class="order-item-title">客户电话</span>
-        <input type="text" class="order-item-content" v-model="itemValues.customer_phone">
+        <input type="tel" class="order-item-content" v-model="itemValues.customer_phone">
       </div>
+      <x-address title="客户地址" :list="itemDatas.addressData" v-model="itemValues.customer_address"
+                 :rowItemClick="refreshAddress" cancelText="取消" confirmText="确定"></x-address>
       <div class="order-item">
-        <span class="order-item-title">客户地址</span>
+        <span class="order-item-title">详细地址</span>
         <input type="text" class="order-item-content" v-model="itemValues.customer_address">
       </div>
-      <div class="order-item">
-        <span class="order-item-title">产品信息</span>
-        <input type="text" class="order-item-content" v-model="itemValues.result_ds">
+      <popup-picker :title="'产品信息'" :data="itemDatas.product_info" cancelText="取消" confirmText="确定"
+                    v-model="itemValues.result_ds.product_name" :isShowBottomLine="false" :placeholder="itemPlaceholder"></popup-picker>
+      <div class="order-item product">
+        <span class="order-item-title">产品数量</span>
+        <input type="number" class="order-item-content" v-model="itemValues.result_ds.order_quantity">
+        <div class="product-detail">
+          <p>222222222222222222222222</p>
+          <p>222222222222222222222222</p>
+          <p>222222222222222222222222</p>
+        </div>
       </div>
       <div class="order-item">
         <span class="order-item-title">已收金额</span>
@@ -35,10 +48,6 @@
       <div class="order-item">
         <span class="order-item-title">订单总金额 </span>
         <span class="order-item-content">{{Number(itemValues.amount) + Number(itemValues.down_payment)}}</span>
-      </div>
-      <div class="order-item">
-        <span class="order-item-title">货量</span>
-        <input type="number" class="order-item-content" v-model="itemValues.result_ds.order_quantity">
       </div>
       <popup-picker :title="'付款方式'" :data="itemDatas.receive_type" cancelText="取消" confirmText="确定"
                     v-model="itemValues.receive_type" :placeholder="itemPlaceholder"></popup-picker>
@@ -68,10 +77,12 @@
   import Vue from 'vue'
   import AlertPlugin from '../vux/src/plugins/alert/index.js'
   import topTitle from '../common/topTitle.vue'
+  import XAddress from '../vux/src/components/x-address/customer-address.vue'
+//  import ChinaAddressV3Data from '../vux/src/datas/china_address_v3.json'
   import CustomDatetimePicker from '../vux/src/components/datetime-picker/custome-datetime-picker.vue'
   import PopupPicker from '../vux/src/components/popup-picker/customer-popup-picker.vue'
   import StringUtil from '../../utils/stringUtil'
-  import {GetSysCodeValue, OrderEdit} from '../../net/orderEdit/OrderEditApi'
+  import {OrderEdit, GetSysCodeValue, GetProduct} from '../../net/orderEdit/OrderEditApi'
   Vue.use(AlertPlugin)
 
   const VALUE_CODE = ['YWX_ORDER_CATEGORY', 'YWX_ORDER_TYPE', 'YWX_RECEIVE_TYPE', 'YWX_EXPRESS_COMPANY']
@@ -80,6 +91,7 @@
     components: {
       topTitle,
       PopupPicker,
+      XAddress,
       CustomDatetimePicker
     },
     data () {
@@ -88,6 +100,13 @@
         itemDatas: {
           order_category: [[]],
           order_type: [[]],
+//          addressData: ChinaAddressV3Data,
+          addressData: [
+            [{name: 'aa', value: '11'}, {name: 'ab', value: '12'}, {name: 'aa', value: '11'}, {name: 'ab', value: '12'}, {name: 'ab', value: '12'}, {name: 'aa', value: '11'}, {name: 'ab', value: '12'}, {name: 'ab', value: '12'}, {name: 'aa', value: '11'}, {name: 'ab', value: '12'}, {name: 'ab', value: '12'}, {name: 'aa', value: '11'}, {name: 'ab', value: '12'}, {name: 'ab', value: '12'}, {name: 'aa', value: '11'}, {name: 'ab', value: '12'}, {name: 'ab', value: '12'}, {name: 'aa', value: '11'}, {name: 'ab', value: '12'}],
+            [{name: 'ba', value: '21'}, {name: 'bb', value: '22'}],
+            [{name: 'ca', value: '31'}, {name: 'cb', value: '32'}]
+          ],
+          product_info: [[]],
           receive_type: [[]],
           express_type: [[]]
         },
@@ -97,11 +116,11 @@
           order_type: [], // 订单类型
           input_time: '', // 订单时间
           customer_name: '', // 客户名称
-          customer_phone: '', // 联系方式
+          customer_phone: null, // 联系方式
           province: '', // 省
           city: '', // 市
           district: '', // 所在区
-          customer_address: '', // 详细地址
+          customer_address: [], // 详细地址
           totalAmount: '',
           down_payment: null, // 已付金额
           amount: null, // 待付金额
@@ -113,9 +132,9 @@
           reference: '', // 备注
           result_ds: {
             product_id: '', // 产品ID
-            order_quantity: '', // 数量
+            order_quantity: null, // 数量
             product_code: '', // 产品代码
-            product_name: '', // 产品名称
+            product_name: [], // 产品名称
             order_detail_id: '' // 同order_id,新增时为空，更新时必输传
           }
         },
@@ -169,9 +188,23 @@
             console.log(response)
           })
         }
+        // 获取产品信息
+        new GetProduct().setSelf(self).start(function (response) {
+          if (response.data.success && response.data.result && response.data.result.record) {
+            let datas = [[]]
+            for (let i = 0; i < response.data.result.record.length; i++) {
+              datas[0][i] = response.data.result.record[i].product_name
+            }
+            self.itemDatas.product_info = datas
+          }
+          console.log(response)
+        })
       })
     },
     methods: {
+      refreshAddress () {
+        console.log('refreshAddress')
+      },
       saveOrder () {
         console.log('saveOrder')
         let self = this
