@@ -19,4 +19,19 @@ class GetProduct extends BaseRequest {
     return WebUrl.GET_PRODUCT
   }
 }
-export {OrderEdit, GetSysCodeValue, GetProduct}
+class GetProvince extends BaseRequest {
+  requestUrl () {
+    return WebUrl.GET_PROVINCE
+  }
+}
+class GetCity extends BaseRequest {
+  requestUrl () {
+    return WebUrl.GET_CITY
+  }
+}
+class GetDistrict extends BaseRequest {
+  requestUrl () {
+    return WebUrl.GET_DISTRICT
+  }
+}
+export {OrderEdit, GetSysCodeValue, GetProduct, GetProvince, GetCity, GetDistrict}

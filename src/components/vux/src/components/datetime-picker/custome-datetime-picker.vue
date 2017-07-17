@@ -231,8 +231,9 @@
     color: #666;
     width: 68%;
     height: 0.35rem;
+    padding-left: 5%;
     vertical-align: middle;
-    text-align: center;
+    /*text-align: center;*/
   }
   .customer-popup-picker-value-1 {
     margin-top: 0.1rem;
@@ -345,12 +346,11 @@
   }
 
   .dp-header .dp-item.dp-left {
-    color: @dialog-button-text-default-color;
+    color: @popup-picker-header-cancel-text-color;
     margin-right: 80px;
   }
 
   .dp-header .dp-item.dp-right {
-    color: @actionsheet-label-default-color;
     margin-left: 80px;
   }
 

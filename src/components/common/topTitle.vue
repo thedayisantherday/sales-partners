@@ -73,7 +73,8 @@
   .toptitle-left-text, .toptitle-right-text {
     width: 0.8rem;
     height: 0.2rem;
-    margin-left: 0.2rem;
+    margin-left: 0.25rem;
+    font-size: 15px;
     text-align: center;
   }
   .toptitle-right{
@@ -91,7 +92,7 @@
     margin-left: -90px;
     text-align: center;
     z-index: 1000;
-    font-size: 18px;
+    font-size: 15px;
     color: #000;
   }
 </style>

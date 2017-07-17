@@ -7,6 +7,9 @@
       </div>
       <div class="customer-popup-picker-value">
         <span v-if="!displayFormat && !showName && value.length">{{value | array2string}}</span>
+        <span v-if="!displayFormat && showName && value.length">{{value | value2name(data)}}</span>
+        <span v-if="displayFormat && value.length">{{ displayFormat(value, value2name(value, data)) }}</span>
+        <span v-if="!value.length && placeholder" v-text="placeholder" class="vux-popup-picker-placeholder"></span>
         <img src="../../icons/arrow_button.png"
              class="customer-popup-picker-img"/>
       </div>
@@ -82,8 +85,14 @@
         default: 'left'
       },
       title: String,
-      cancelText: String,
-      confirmText: String,
+      cancelText: {
+        type: String,
+        default: '取消'
+      },
+      confirmText: {
+        type: String,
+        default: '确定'
+      },
       pickerTitle: String,
       data: {
         type: Array,
@@ -132,6 +141,8 @@
         this.showValue = true
       },
       onHide (type) {
+        console.log(this.value)
+        console.log(value2name(this.value, this.data))
         this.showValue = false
         if (type) {
           this.closeType = true
@@ -225,8 +236,9 @@
     color: #666;
     width: 68%;
     height: 0.35rem;
+    padding-left: 5%;
     vertical-align: middle;
-    text-align: center;
+    /*text-align: center;*/
   }
   .customer-popup-picker-img {
     width: 0.2rem;
@@ -268,5 +280,8 @@
   .vux-popup-picker-header-menu-right {
     padding-right: 15px;
     color: #04BE02;
+  }
+  .vux-popup-picker-placeholder {
+    color: #ccc;
   }
 </style>

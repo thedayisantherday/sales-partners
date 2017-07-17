@@ -24,9 +24,6 @@
   top: 0.4rem;
   left: 0;
 }
-.order-edit-picker{
-  border-bottom: #e8e8e8;
-}
 .order-item {
   background-color: #fff;
   width: 100%;
@@ -57,15 +54,43 @@
   background: none;
 }
 .product {
-  height: 1rem;
+  height: 1.3rem;
+}
+.product_input {
+  width: 50%;
+}
+.product_btn {
+  width: 15%;
+  padding: 0.03rem 2%;
+  margin-left: 0.05rem;
+  border: solid 1px #ccc;
+  border-radius: 5px;
 }
 .product-detail {
   overflow: auto;
   width: 96%;
-  height: 0.5rem;
+  height: 0.8rem;
   margin: 0.05rem 2%;
   border: solid 1px #ccc;
   border-radius: 5px;
+}
+.product-detail-item {
+  display: flex;
+  flex-direction: row;
+  height: 0.2rem;
+  margin: 0.05rem;
+  line-height: 0.2rem;
+  vertical-align: middle;
+}
+.product-detail-item-delete {
+  width: 0.4rem;
+  height: 0.2rem;
+  background: url("../../assets/img/delete.png") 50% no-repeat;
+  background-size: 0.15rem;
+}
+.product-detail-item-text {
+  width: 60%;
+  height: 0.2rem;
 }
 .order-datetime {
   display: inline-block;

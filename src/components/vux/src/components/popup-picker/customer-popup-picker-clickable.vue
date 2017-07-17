@@ -174,10 +174,16 @@
         this.$emit('on-shadow-change', getObject(val))
       },
       rowClick (columnIndex, rowIndex) {
+        let temp
+        for (let i = 0; i < columnIndex; i++) {
+          this.tempValue = temp
+        }
+        this.tempValue = temp
         if (this.data && this.data.length) {
           this.columnNo = this.columnNo < this.data.length ? columnIndex + 1 : columnIndex
         }
         this.rowNo = rowIndex
+
         if (this.rowItemClick) {
           this.rowItemClick(columnIndex, rowIndex)
         }
