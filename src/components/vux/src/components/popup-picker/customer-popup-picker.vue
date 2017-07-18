@@ -141,8 +141,6 @@
         this.showValue = true
       },
       onHide (type) {
-        console.log(this.value)
-        console.log(value2name(this.value, this.data))
         this.showValue = false
         if (type) {
           this.closeType = true

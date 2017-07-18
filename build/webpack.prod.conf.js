@@ -5,13 +5,11 @@ var config = require('../config')
 var merge = require('webpack-merge')
 var baseWebpackConfig = require('./webpack.base.conf')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+// var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
-if(config.module.offline){
-  config.build.productionSourceMap= false
-}
+config.build.productionSourceMap = false
 
 // 引入插件
 var vConsolePlugin = require('vconsole-webpack-plugin')
@@ -46,9 +44,6 @@ var webpackConfig = merge(baseWebpackConfig, {
       },
       sourceMap: true
     }),
-    new vConsolePlugin({
-      enable: config.module.isTestPackage // 发布代码前记得改回 false
-    }),
     // extract css into its own file
     new ExtractTextPlugin({
       filename: utils.assetsPath('css/[name].css')
@@ -63,7 +58,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
-    //new HtmlWebpackPlugin({
+    // new HtmlWebpackPlugin({
     //  filename: config.build.index,
     //  template: 'index.html',
     //  inject: true,
@@ -76,7 +71,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     //  },
     //  // necessary to consistently work with multiple chunks via CommonsChunkPlugin
     //  chunksSortMode: 'dependency'
-    //}),
+    // }),
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
@@ -93,18 +88,18 @@ var webpackConfig = merge(baseWebpackConfig, {
               path.join(__dirname, '../static/libs')
             ) === 0
           )
-          //module.resource.indexOf(
+          // module.resource.indexOf(
           //  path.join(__dirname, '../node_modules')
-          //) === 0
+          // ) === 0
         )
       }
     }),
     // extract webpack runtime and module manifest to its own file in order to
     // prevent vendor hash from being updated whenever app bundle is updated
-    //new webpack.optimize.CommonsChunkPlugin({
+    // new webpack.optimize.CommonsChunkPlugin({
     //  name: 'manifest',
     //  chunks: ['vendor']
-    //}),
+    // }),
     // copy custom static assets
     new CopyWebpackPlugin([
       {

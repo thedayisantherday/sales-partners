@@ -320,9 +320,6 @@
             if (response.data.success) {
               self.$router.back()
             }
-          }, function (response) {
-            // 这里是处理错误的回调
-            console.log(response)
           })
         }
       },
