@@ -6,6 +6,7 @@ import Router from 'vue-router'
 import paidOrderList from '../components/paidOrder/paidOrderList.vue'
 import unpaidOrderList from '../components/collectionOrder/collectionOrderList.vue'
 import orderEdit from '../components/paidOrder/orderEdit.vue'
+import orderDetail from '../components/paidOrder/orderDetail.vue'
 
 Vue.use(Router)
 
@@ -25,6 +26,11 @@ export default new Router({
       path: '/orderEdit',
       name: 'orderEdit',
       component: orderEdit
+    },
+    {
+      path: '/orderDetail',
+      name: 'orderDetail',
+      component: orderDetail
     }
   ]
 })

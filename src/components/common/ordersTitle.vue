@@ -28,7 +28,6 @@
     },
     methods: {
       handleClick (callback) {
-        console.log(this.titleProps.itemCount)
         if (!callback) {
           return
         }

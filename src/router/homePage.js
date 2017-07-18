@@ -5,6 +5,7 @@ import collectionOrderList from '../components/collectionOrder/collectionOrderLi
 import me from '../components/me/me.vue'
 import login from '../components/me/login.vue'
 import orderEdit from '../components/paidOrder/orderEdit.vue'
+import orderDetail from '../components/paidOrder/orderDetail.vue'
 
 Vue.use(Router)
 
@@ -29,6 +30,11 @@ export default new Router({
       path: '/orderEdit',
       name: 'orderEdit',
       component: orderEdit
+    },
+    {
+      path: '/orderDetail',
+      name: 'orderDetail',
+      component: orderDetail
     },
     {
       path: '/me',

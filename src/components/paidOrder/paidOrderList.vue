@@ -4,7 +4,9 @@
     <orders-title :titleProps="ordersTitleProps"></orders-title>
     <div class="body" ref="orderList">
       <p v-if="isShow && isShowRefresh" class="orderListRefresh">下拉刷新</p>
-      <order-item v-for="order in orderList" :orderProps="order" ref="orderItem"></order-item>
+      <div v-for="order in orderList" @click="gotoOrderDetail(order)">
+        <order-item :orderProps="order" ref="orderItem"/>
+      </div>
       <p v-if="isShow && isShowMore" class="orderListMore">上拉加载更多</p>
     </div>
     <img class="addOrder" src="../../assets/img/plus.png" @click="handleClick"/>
@@ -17,6 +19,7 @@
   import orderItem from '../common/orderItem.vue'
   import {GetOrderListApi} from '../../net/orderEdit/GetOrderListApi'
   import StringUtil from '../../utils/stringUtil'
+  import CommonUtil from '../../utils/commonUtil'
   export default {
     name: 'paidList',
     components: {
@@ -57,7 +60,13 @@
         // 模块跳转
         window.location.href = '/app/paidOrder/paidOrder.html#/orderEdit'
       },
+      gotoOrderDetail (order) {
+        this.$router.push({name: 'orderDetail', params: {orderDetail: order}})
+      },
       getOrderList () {
+        if (CommonUtil.isFastClick()) {
+          return
+        }
         let self = this
         let params = {
           pagesize: '20',
@@ -67,8 +76,6 @@
           order_category: '02'
         }
         new GetOrderListApi(params).setSelf(self).start(function (response) {
-          console.log(self.pagenum)
-          console.log(response.data)
           if (response.data.success) {
             if (!StringUtil.isEmpty(response.data.result) && !StringUtil.isEmpty(response.data.result.totalCount)) {
               self.ordersTitleProps.itemCount = response.data.result.totalCount
@@ -86,7 +93,6 @@
           }
           self.isShowRefresh = false
           self.isShowMore = false
-          console.log(self.orderList)
         })
       },
       touchStart (event) {
@@ -96,11 +102,9 @@
         let currentY = event.touches[0].clientY // 当前触点的Y坐标
         let currentScrollTop = this.$refs.orderList.offsetParent.scrollTop // 订单列表最顶端与可视窗口顶端的距离
 
-        console.log('touchY:' + this.touchY + ',currentY:' + currentY)
         // 如果向上滑动
         if (currentY < this.touchY) {
           let orderListHeight = this.getOrderListHeight()
-          console.log('orderListHeight:' + orderListHeight)
           if (!this.isShowMore && (orderListHeight < this.getWindowHeight() ||
             (orderListHeight > this.getWindowHeight() && currentScrollTop > orderListHeight - this.getWindowHeight() + 20))) {
             this.isShowMore = true

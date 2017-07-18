@@ -29,6 +29,15 @@
   border-radius: 8px;
 }
 .login-btn {
+   width: 80%;
+   height: 0.35rem;
+   margin: 10%;
+   border: none;
+   border-radius: 5px;
+   outline: none;
+  background-color: #2f9fff;
+ }
+.login-btn-disable {
   width: 80%;
   height: 0.35rem;
   margin: 10%;

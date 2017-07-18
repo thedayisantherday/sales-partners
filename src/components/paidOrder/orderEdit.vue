@@ -38,17 +38,12 @@
         <span class="order-item-title">产品数量</span>
         <input type="number" class="order-item-content product_input" v-model="product.order_quantity">
         <span class="product_btn" @click="addProduct">添加</span>
-        <div class="product-detail">
-          <p class="product-detail-item" v-for="(item, index) in itemValues.result_ds">
-            <span class="product-detail-item-delete" @click="deleteProduct(index)"></span>
-            <span class="product-detail-item-text">{{item.product_name}}</span>
+        <div class="order-product-detail">
+          <p class="order-product-detail-item" v-for="(item, index) in itemValues.result_ds">
+            <span class="order-product-detail-item-delete" @click="deleteProduct(index)"></span>
+            <span class="order-product-detail-item-text">{{item.product_name}}</span>
             <span>{{item.order_quantity}}</span>
           </p>
-          <!--<div class="product-detail-item" v-for="(item, index) in itemValues.result_ds">
-            <div class="product-detail-item-delete"></div>
-            <span>{{item.product_name}}</span>
-            <span>{{item.order_quantity}}</span>
-          </div>-->
         </div>
       </div>
       <div class="order-item">
@@ -95,6 +90,7 @@
   import CustomDatetimePicker from '../vux/src/components/datetime-picker/custome-datetime-picker.vue'
   import PopupPicker from '../vux/src/components/popup-picker/customer-popup-picker.vue'
   import StringUtil from '../../utils/stringUtil'
+  import CommonUtil from '../../utils/commonUtil'
   import {OrderEdit, GetSysCodeValue, GetProduct, GetProvince, GetCity, GetDistrict} from '../../net/orderEdit/OrderEditApi'
   Vue.use(AlertPlugin)
 
@@ -156,13 +152,12 @@
           },
           rightBtnVisible: true,
           rightBtnCallback: function () {
-            console.log('订单编辑 right button click')
             self.saveOrder()
           }
         }
       }
     },
-    mounted () {
+    activated () {
       let self = this
       this.$nextTick(() => {
         for (var i = 0; i < VALUE_CODE.length; i++) {
@@ -192,7 +187,6 @@
                   self.itemDatas.express_type = datas
                   break
                 default:
-                  console.log('default')
                   break
               }
             }
@@ -207,7 +201,6 @@
               product.value = response.data.result.record[i].product_id + ''
               self.itemDatas.product_info.push(product)
             }
-            console.log(self.itemDatas.product_info)
           }
         })
         new GetProvince().setSelf(self).start(function (response) {
@@ -298,6 +291,9 @@
         this.itemValues.result_ds.splice(index, 1)
       },
       saveOrder () {
+        if (CommonUtil.isFastClick()) {
+          return
+        }
         let self = this
         if (this.checkItemValue()) {
           let params = {
@@ -321,7 +317,9 @@
             reference: this.itemValues.reference
           }
           new OrderEdit(params).setSelf(self).start(function (response) {
-            self.$router.back()
+            if (response.data.success) {
+              self.$router.back()
+            }
           }, function (response) {
             // 这里是处理错误的回调
             console.log(response)
