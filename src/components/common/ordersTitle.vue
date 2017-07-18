@@ -65,7 +65,7 @@
   .orders-title-count {
     height: 0.3rem;
     padding: 0.02rem 0.08rem;
-    background-color: #0acc0a;
+    background-color: #09BB07;
     border-radius: 0.15rem;
     font-size: 0.1rem;
     color: #fff;

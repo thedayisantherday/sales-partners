@@ -275,6 +275,9 @@
         console.log('refreshAddress')
       },
       addProduct () {
+        if (StringUtil.isEmpty(this.product.product_id[0]) || StringUtil.isEmpty(this.product.order_quantity)) {
+          return
+        }
         let product = {}
         product.product_id = this.product.product_id[0]
         product.product_name = this.$refs.productInfo.getNameValues()

@@ -75,6 +75,7 @@
     height: 0.2rem;
     margin-left: 0.25rem;
     font-size: 15px;
+    color: #09BB07;
     text-align: center;
   }
   .toptitle-right{
