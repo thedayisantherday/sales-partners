@@ -9,6 +9,11 @@ class OrderEdit extends BaseRequest {
     return WebUrl.SAVE_ORDER
   }
 }
+class SaveAttachment extends BaseRequest {
+  requestUrl () {
+    return WebUrl.SAVE_ATTACHMENT
+  }
+}
 class GetSysCodeValue extends BaseRequest {
   requestUrl () {
     return WebUrl.GETCODE
@@ -34,4 +39,4 @@ class GetDistrict extends BaseRequest {
     return WebUrl.GET_DISTRICT
   }
 }
-export {OrderEdit, GetSysCodeValue, GetProduct, GetProvince, GetCity, GetDistrict}
+export {OrderEdit, SaveAttachment, GetSysCodeValue, GetProduct, GetProvince, GetCity, GetDistrict}

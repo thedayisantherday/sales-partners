@@ -130,6 +130,10 @@
       isTransferDom: {
         type: Boolean,
         default: true
+      },
+      isRequired: {
+        type: Boolean,
+        default: true
       }
     },
     methods: {

@@ -55,14 +55,27 @@
         <input type="number" class="order-item-content" v-model="itemValues.amount">
       </div>
       <div class="order-item">
-        <span class="order-item-title">订单总金额 </span>
-        <span class="order-item-content">{{Number(itemValues.amount) + Number(itemValues.down_payment)}}</span>
+        <span class="order-edit-item-title">订单总金额 </span>
+        <span class="order-detail-item-content">{{Number(itemValues.amount) + Number(itemValues.down_payment)}}</span>
       </div>
       <popup-picker :title="'付款方式'" :data="itemDatas.receive_type" :columns="1"
                     v-model="itemValues.receive_type" :placeholder="itemPlaceholder" show-name></popup-picker>
       <div class="order-item">
         <span class="order-item-title">付款账号</span>
         <input type="text" class="order-item-content" v-model="itemValues.receive_account">
+      </div>
+      <div class="order-edit-attachment">
+        <div class="order-edit-attachment-top">
+          <span class="order-item-title">附件</span>
+          <div class="order-edit-attachment-add">
+            <input type="file" class="order-edit-attachment-input" id="file_head" @change="setAttachments" ref="attachmentInput"/>
+          </div>
+        </div>
+        <div v-if="attachment && attachment.length > 0" class="order-edit-attachment-info">
+          <div v-for="item in attachment" class="order-edit-attachment-item">
+            <img class="order-edit-attachment-preview" :src="setAttachmentPreview(item)"/>
+          </div>
+        </div>
       </div>
       <div class="order-item">
         <span class="order-item-title">微信开单号</span>
@@ -79,6 +92,7 @@
         <input type="text" class="order-item-content" v-model="itemValues.reference">
       </div>
     </div>
+    <loading v-model="isLoading" :text="'正在保存订单...'"></loading>
   </div>
 </template>
 
@@ -86,12 +100,14 @@
   import Vue from 'vue'
   import AlertPlugin from '../vux/src/plugins/alert/index.js'
   import topTitle from '../common/topTitle.vue'
+  import Loading from '../vux/src/components/loading'
 //  import XAddress from '../vux/src/components/popup-picker/customer-popup-picker-clickable.vue'
   import CustomDatetimePicker from '../vux/src/components/datetime-picker/custome-datetime-picker.vue'
   import PopupPicker from '../vux/src/components/popup-picker/customer-popup-picker.vue'
   import StringUtil from '../../utils/stringUtil'
   import CommonUtil from '../../utils/commonUtil'
-  import {OrderEdit, GetSysCodeValue, GetProduct, GetProvince, GetCity, GetDistrict} from '../../net/orderEdit/OrderEditApi'
+//  import qs from 'qs'
+  import {OrderEdit, SaveAttachment, GetSysCodeValue, GetProduct, GetProvince, GetCity, GetDistrict} from '../../net/orderEdit/OrderEditApi'
   Vue.use(AlertPlugin)
 
   const VALUE_CODE = ['YWX_ORDER_CATEGORY', 'YWX_ORDER_TYPE', 'YWX_RECEIVE_TYPE', 'YWX_EXPRESS_COMPANY']
@@ -101,7 +117,8 @@
       topTitle,
       PopupPicker,
 //      XAddress,
-      CustomDatetimePicker
+      CustomDatetimePicker,
+      Loading
     },
     data () {
       let self = this
@@ -143,6 +160,8 @@
           product_name: '',
           order_quantity: null
         },
+        attachment: [],
+        orderId: '',
         itemPlaceholder: '请选择',
         topTitleProps: {
           name: '订单编辑',
@@ -154,12 +173,59 @@
           rightBtnCallback: function () {
             self.saveOrder()
           }
-        }
+        },
+        isLoading: false
       }
     },
     activated () {
-      let self = this
       this.$nextTick(() => {
+        this.getSysCodeValue()
+        this.getProduct()
+        this.getProvinces()
+      })
+    },
+    watch: {
+      'itemValues.province': function () {
+        this.itemValues.district = []
+        this.getCities()
+      },
+      'itemValues.city': function () {
+        this.getDistrictes()
+      },
+      'orderId': function () {
+        this.saveAttachment(this.orderId)
+      }
+    },
+    methods: {
+      refreshAddress () {
+        console.log('refreshAddress')
+      },
+      addProduct () {
+        if (StringUtil.isEmpty(this.product.product_id[0])) {
+          this.showAlert('选择产品信息')
+          return
+        }
+        if (StringUtil.isEmpty(this.product.order_quantity)) {
+          this.showAlert('请输入产品数量')
+          return
+        }
+        let product = {}
+        product.product_id = this.product.product_id[0]
+        product.product_name = this.$refs.productInfo.getNameValues()
+        product.order_quantity = this.product.order_quantity
+        this.itemValues.result_ds.push(product)
+        // 重置product
+        this.product = {
+          product_id: [],
+          product_name: '',
+          order_quantity: null
+        }
+      },
+      deleteProduct (index) {
+        this.itemValues.result_ds.splice(index, 1)
+      },
+      getSysCodeValue () { // 获取值列表
+        let self = this
         for (var i = 0; i < VALUE_CODE.length; i++) {
           let params = {
             code: VALUE_CODE[i]
@@ -192,7 +258,9 @@
             }
           })
         }
-        // 获取产品信息
+      },
+      getProduct () { // 获取产品信息
+        let self = this
         new GetProduct().setSelf(self).start(function (response) {
           if (response.data.success && response.data.result && response.data.result.record) {
             for (let i = 0; i < response.data.result.record.length; i++) {
@@ -203,6 +271,9 @@
             }
           }
         })
+      },
+      getProvinces () { // 获取省份
+        let self = this
         new GetProvince().setSelf(self).start(function (response) {
           if (response.data.success && response.data.result && response.data.result.record) {
             // 清空数组
@@ -215,11 +286,8 @@
             }
           }
         })
-      })
-    },
-    watch: {
-      'itemValues.province': function () {
-        this.itemValues.district = []
+      },
+      getCities () { // 获取城市
         let self = this
         let params = {
           province_id: this.itemValues.province[0]
@@ -244,7 +312,7 @@
           }
         })
       },
-      'itemValues.city': function () {
+      getDistrictes () { // 获取区、县
         let self = this
         let params = {
           city_id: this.itemValues.city[0]
@@ -268,30 +336,6 @@
             }
           }
         })
-      }
-    },
-    methods: {
-      refreshAddress () {
-        console.log('refreshAddress')
-      },
-      addProduct () {
-        if (StringUtil.isEmpty(this.product.product_id[0]) || StringUtil.isEmpty(this.product.order_quantity)) {
-          return
-        }
-        let product = {}
-        product.product_id = this.product.product_id[0]
-        product.product_name = this.$refs.productInfo.getNameValues()
-        product.order_quantity = this.product.order_quantity
-        this.itemValues.result_ds.push(product)
-        // 重置product
-        this.product = {
-          product_id: [],
-          product_name: '',
-          order_quantity: null
-        }
-      },
-      deleteProduct (index) {
-        this.itemValues.result_ds.splice(index, 1)
       },
       saveOrder () {
         if (CommonUtil.isFastClick()) {
@@ -320,10 +364,63 @@
             reference: this.itemValues.reference
           }
           new OrderEdit(params).setSelf(self).start(function (response) {
-            if (response.data.success) {
+            if (response.data.success && response.data.result && response.data.result.order_id) {
+              console.log(response.data.result.order_id)
+              self.orderId = response.data.result.order_id
+//              self.saveAttachment(response.data.result.order_id)
+//              console.log(response.data.result.order_id)
+            } else {
+              self.showAlert('订单保存失败，请重新提交！')
+            }
+            self.isLoading = false
+          }, function (response) {
+            self.isLoading = false
+          })
+        }
+      },
+      setAttachments () {
+        if (this.attachment && this.attachment.length >= 3) {
+          this.showAlert('最多只能上传3个附件！')
+          return
+        }
+        let preview = this.$refs.attachmentInput
+//        let img = preview.value
+//        if (!img.match(/.jpg|.gif|.png|.jpeg|.bmp/i)) {
+//          return alert('您上传的图片格式不正确，请重新选择！')
+//        }
+        if (preview.files) {
+          for (let i = 0; i < preview.files.length; i++) {
+            this.attachment.push(preview.files[i])
+          }
+        }
+      },
+      setAttachmentPreview (val) {
+        return window.URL.createObjectURL(val)
+      },
+      saveAttachment (orderId) {
+        if (StringUtil.isEmpty(orderId)) {
+          return
+        }
+        if (!this.attachment || this.attachment.length <= 0) {
+          this.$router.back()
+          return
+        }
+        let self = this
+        let config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        for (let i = 0; i < this.attachment.length; i++) {
+          let param = new FormData() // 创建form对象
+          param.append('file', this.attachment[i]) // 通过append向form对象添加数据
+          param.append('source_type', 'YWX_ORDER') // 添加form表单中其他数据
+          param.append('pkvalue', orderId)
+          new SaveAttachment(param, config).setSelf(self).startFormData(function (response) {
+            if (response.data && i === self.attachment.length - 1) {
               self.$router.back()
             }
-          })
+          }, null)
         }
       },
       checkItemValue () {
@@ -345,6 +442,9 @@
         }
         if (StringUtil.isEmpty(this.itemValues.customer_phone)) {
           this.showAlert('请输入客户电话')
+          return false
+        } else if (this.itemValues.customer_phone.length !== 11) {
+          this.showAlert('客户电话位数输入有误，请重新输入')
           return false
         }
         if (StringUtil.isEmpty(this.itemValues.city) ||

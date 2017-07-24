@@ -29,7 +29,6 @@
   width: 100%;
   height: 0.35rem;
   line-height: 0.35rem;
-  padding: 0 1%;
   border-bottom: 1px solid #e8e8e8;
 }
 .order-item>input {
@@ -43,7 +42,14 @@
   width: 30%;
   padding-left: 5%;
 }
+.order-edit-item-title {
+  display: inline-block;
+  color: #666;
+  width: 30%;
+  padding-left: 5%;
+}
 .order-item-content {
+  display: inline-block;
   overflow: auto;
   width: 66%;
   height: 0.28rem;
@@ -139,11 +145,12 @@
   flex-direction: row;
   height: 1rem;
   line-height: 1rem;
+  padding: 0 1%;
   border-bottom: solid 1px #e8e8e8;
 }
 .order-detail-product-info {
   overflow: auto;
-  width: 66%;
+  width: 68%;
   height: 0.8rem;
   margin: 0.1rem 0;
   padding-left: 0.1rem;
@@ -161,20 +168,20 @@
   flex-direction: row;
   height: 0.35rem;
   line-height: 0.35rem;
+  padding: 0 1%;
   border-bottom: solid 1px #e8e8e8;
 }
 .order-detail-address-info {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
+  overflow: hidden;
+  width: 68%;
+  height: 0.3rem;
+  padding-left: 0.1rem;
   /*text-overflow:ellipsis;
   white-space:nowrap;
   word-break:keep-all;*/
-  overflow: hidden;
-  width: 66%;
-  height: 0.3rem;
-  margin: 0.025rem 0;
-  padding-left: 0.1rem;
 }
 .order-detail-address-item {
   line-height: 0.3rem;
@@ -183,4 +190,44 @@
 .order-detail-product-text {
   display: inline-block;
   width: 75%;
+}
+.order-edit-attachment {
+  border-bottom: solid 1px #e8e8e8;
+}
+.order-edit-attachment-top {
+  display: flex;
+  flex-direction: row;
+  height: 0.5rem;
+  line-height: 0.5rem;
+  padding: 0 1%;
+}
+.order-edit-attachment-add {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  width: 68%;
+  height: 0.5rem;
+  padding-left: 0.1rem;
+  background: url("../../assets/img/attachment_plus.png") no-repeat 0 50%;
+  background-size: 0.35rem;
+}
+.order-edit-attachment-input {
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+.order-edit-attachment-info {
+  height: 0.6rem;
+  margin: 0.1rem 5%;
+}
+.order-edit-attachment-item {
+  display: inline-block;
+  width: 33%;
+  padding: 0 1%;
+  text-align: center;
+}
+.order-edit-attachment-preview {
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
 }

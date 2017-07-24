@@ -10,6 +10,7 @@
       <p v-if="isShow && isShowMore" class="orderListMore">上拉加载更多</p>
     </div>
     <img class="addOrder" src="../../assets/img/plus.png" @click="handleClick"/>
+    <loading v-model="isLoading" :text="'获取订单中...'"></loading>
   </div>
 </template>
 
@@ -17,6 +18,7 @@
   import topTitle from '../common/topTitle.vue'
   import ordersTitle from '../common/ordersTitle.vue'
   import orderItem from '../common/orderItem.vue'
+  import Loading from '../vux/src/components/loading'
   import {GetOrderListApi} from '../../net/orderEdit/GetOrderListApi'
   import StringUtil from '../../utils/stringUtil'
   import CommonUtil from '../../utils/commonUtil'
@@ -25,7 +27,8 @@
     components: {
       topTitle,
       ordersTitle,
-      orderItem
+      orderItem,
+      Loading
     },
     data () {
       return {
@@ -40,7 +43,8 @@
         touchY: 0,
         originScrollTop: 0,
         isShowRefresh: false,
-        isShowMore: false
+        isShowMore: false,
+        isLoading: false
       }
     },
     activated () {
@@ -67,6 +71,7 @@
         if (CommonUtil.isFastClick()) {
           return
         }
+        this.isLoading = true
         let self = this
         let params = {
           pagesize: '20',
@@ -93,6 +98,9 @@
           }
           self.isShowRefresh = false
           self.isShowMore = false
+          self.isLoading = false
+        }, function (response) {
+          self.isLoading = false
         })
       },
       touchStart (event) {
