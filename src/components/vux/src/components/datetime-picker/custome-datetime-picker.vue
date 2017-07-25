@@ -3,6 +3,7 @@
       <div class="customer-popup-picker-title">
         <label v-if="title" v-html="title"></label>
         <inline-desc v-if="inlineDesc">{{inlineDesc}}</inline-desc>
+        <span v-if="isRequired" class="customer-popup-picker-required">*</span>
       </div>
       <div class="customer-popup-picker-value">
         <div style="display: inline-block; margin-top: 0.1rem">
@@ -95,6 +96,10 @@
       extraObj: { // 必须为二位数组类型，[[]]
         type: Object,
         default: null
+      },
+      isRequired: {
+        type: Boolean,
+        default: false
       }
     },
     created () {
@@ -225,6 +230,11 @@
     color: #666;
     width: 30%;
     padding-left: 5%;
+  }
+  .customer-popup-picker-required {
+    color: red;
+    font-size: 0.15rem;
+    vertical-align: middle;
   }
   .customer-popup-picker-value {
     display: inline-block;

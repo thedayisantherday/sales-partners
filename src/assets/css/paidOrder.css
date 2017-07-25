@@ -42,6 +42,11 @@
   width: 30%;
   padding-left: 5%;
 }
+.order-item-required {
+  color: red;
+  font-size: 0.15rem;
+  vertical-align: middle;
+}
 .order-edit-item-title {
   display: inline-block;
   color: #666;

@@ -3,39 +3,47 @@
     <top-title :titleProps="topTitleProps"></top-title>
     <div class="order-edit-body">
       <popup-picker :title="'订单类别'" :data="itemDatas.order_category" :columns="1"
-                    v-model="itemValues.order_category" :placeholder="itemPlaceholder" show-name></popup-picker>
+                    v-model="itemValues.order_category" :placeholder="itemPlaceholder" show-name is-required></popup-picker>
       <popup-picker :title="'订单类型'" :data="itemDatas.order_type" :columns="1"
-                    v-model="itemValues.order_type" :placeholder="itemPlaceholder" show-name></popup-picker>
+                    v-model="itemValues.order_type" :placeholder="itemPlaceholder" show-name is-required></popup-picker>
       <custom-datetime-picker :title="'时间'" format="YYYY-MM-DD HH:mm" v-model="itemValues.input_time"
-                              :placeholder="itemPlaceholder"></custom-datetime-picker>
+                              :placeholder="itemPlaceholder" is-required></custom-datetime-picker>
       <div class="order-item">
-        <span class="order-item-title">订单数量</span>
-        <input type="number" class="order-item-content" v-model="itemValues.order_quantity">
-      </div>
-      <div class="order-item">
-        <span class="order-item-title">客户姓名</span>
+        <p class="order-item-title">
+          <span>客户姓名</span>
+          <span class="order-item-required">*</span>
+        </p>
         <input type="text" class="order-item-content" v-model="itemValues.customer_name">
       </div>
       <div class="order-item">
-        <span class="order-item-title">客户电话</span>
+        <p class="order-item-title">
+          <span>客户电话</span>
+          <span class="order-item-required">*</span>
+        </p>
         <input type="tel" class="order-item-content" v-model="itemValues.customer_phone">
       </div>
      <!-- <x-address title="客户地址" :data="itemDatas.addressData" v-model="itemValues.customer_address"
-                                                                                                         :rowItemClick="refreshAddress" cancelText="取消" confirmText="确定"></x-address>-->
+                     :rowItemClick="refreshAddress" cancelText="取消" confirmText="确定"></x-address>-->
       <popup-picker :title="'所在省'" :data="itemDatas.province_list" :columns="1"
-                    v-model="itemValues.province" :placeholder="itemPlaceholder" show-name></popup-picker>
+                    v-model="itemValues.province" :placeholder="itemPlaceholder" show-name is-required></popup-picker>
       <popup-picker :title="'所在市'" :data="itemDatas.city_list" :columns="1"
-                    v-model="itemValues.city" :placeholder="itemPlaceholder" show-name></popup-picker>
+                    v-model="itemValues.city" :placeholder="itemPlaceholder" show-name is-required></popup-picker>
       <popup-picker :title="'所在区/县'" :data="itemDatas.district_list" :columns="1"
                     v-model="itemValues.district" :placeholder="itemPlaceholder" show-name></popup-picker>
       <div class="order-item">
-        <span class="order-item-title">详细地址</span>
+        <p class="order-item-title">
+          <span>详细地址</span>
+          <span class="order-item-required">*</span>
+        </p>
         <input type="text" class="order-item-content" v-model="itemValues.customer_address">
       </div>
       <popup-picker :title="'产品信息'" :data="itemDatas.product_info" :columns="1" :isShowBottomLine="false"
-                    v-model="product.product_id" :placeholder="itemPlaceholder" show-name ref="productInfo"></popup-picker>
+                    v-model="product.product_id" :placeholder="itemPlaceholder" show-name is-required ref="productInfo"></popup-picker>
       <div class="order-item product">
-        <span class="order-item-title">产品数量</span>
+        <p class="order-item-title">
+          <span>产品数量</span>
+          <span class="order-item-required">*</span>
+        </p>
         <input type="number" class="order-item-content product_input" v-model="product.order_quantity">
         <span class="product_btn" @click="addProduct">添加</span>
         <div class="order-product-detail">
@@ -45,6 +53,10 @@
             <span>{{item.order_quantity}}</span>
           </p>
         </div>
+      </div>
+      <div class="order-item">
+        <span class="order-edit-item-title">订单数量</span>
+        <span class="order-detail-item-content">{{itemValues.order_quantity}}</span>
       </div>
       <div class="order-item">
         <span class="order-item-title">已收金额</span>
@@ -58,8 +70,8 @@
         <span class="order-edit-item-title">订单总金额 </span>
         <span class="order-detail-item-content">{{Number(itemValues.amount) + Number(itemValues.down_payment)}}</span>
       </div>
-      <popup-picker :title="'付款方式'" :data="itemDatas.receive_type" :columns="1"
-                    v-model="itemValues.receive_type" :placeholder="itemPlaceholder" show-name></popup-picker>
+      <popup-picker :title="'付款方式'" :data="itemDatas.receive_type" :columns="1" v-model="itemValues.receive_type"
+                    :placeholder="itemPlaceholder" show-name is-required></popup-picker>
       <div class="order-item">
         <span class="order-item-title">付款账号</span>
         <input type="text" class="order-item-content" v-model="itemValues.receive_account">
@@ -78,7 +90,10 @@
         </div>
       </div>
       <div class="order-item">
-        <span class="order-item-title">微信开单号</span>
+        <p class="order-item-title">
+          <span>微信开单号</span>
+          <span class="order-item-required">*</span>
+        </p>
         <input type="text" class="order-item-content" v-model="itemValues.weixin_operator_num">
       </div>
       <!--<div class="order-item">
@@ -86,7 +101,7 @@
         <input type="text" class="order-item-content" v-model="itemValues.order_state">
       </div>-->
       <popup-picker :title="'快递公司'" :data="itemDatas.express_type" :columns="1"
-                    v-model="itemValues.express_type" :placeholder="itemPlaceholder" show-name></popup-picker>
+                    v-model="itemValues.express_type" :placeholder="itemPlaceholder" show-name is-required></popup-picker>
       <div class="order-item">
         <span class="order-item-title">备注</span>
         <input type="text" class="order-item-content" v-model="itemValues.reference">
@@ -137,7 +152,6 @@
           order_category: [], // 订单类别
           order_type: [], // 订单类型
           input_time: '', // 订单时间
-          order_quantity: null,
           customer_name: '', // 客户名称
           customer_phone: null, // 联系方式
           province: [], // 省
@@ -145,6 +159,7 @@
           district: [], // 所在区
           customer_address: [], // 详细地址
           result_ds: [],
+          order_quantity: 0,
           down_payment: null, // 已付金额
           amount: null, // 待付金额
           totalAmount: '',
@@ -191,6 +206,15 @@
       },
       'itemValues.city': function () {
         this.getDistrictes()
+      },
+      'itemValues.result_ds': function () {
+        let orderCount = 0
+        if (this.itemValues.result_ds && this.itemValues.result_ds.length > 0) {
+          for (let i = 0; i < this.itemValues.result_ds.length; i++) {
+            orderCount += Number(this.itemValues.result_ds[i].order_quantity)
+          }
+        }
+        this.itemValues.order_quantity = orderCount
       },
       'orderId': function () {
         this.saveAttachment(this.orderId)
@@ -343,6 +367,7 @@
         }
         let self = this
         if (this.checkItemValue()) {
+          self.isLoading = true
           let params = {
             order_category: this.itemValues.order_category[0],
             order_type: this.itemValues.order_type[0],
@@ -405,6 +430,7 @@
           this.$router.back()
           return
         }
+        this.isLoading = true
         let self = this
         let config = {
           headers: {
@@ -419,6 +445,7 @@
           new SaveAttachment(param, config).setSelf(self).startFormData(function (response) {
             if (response.data && i === self.attachment.length - 1) {
               self.$router.back()
+              self.isLoading = false
             }
           }, null)
         }
@@ -447,18 +474,20 @@
           this.showAlert('客户电话位数输入有误，请重新输入')
           return false
         }
-        if (StringUtil.isEmpty(this.itemValues.city) ||
-          StringUtil.isEmpty(this.itemValues.province) ||
-          StringUtil.isEmpty(this.itemValues.customer_address)) {
-          this.showAlert('请输入客户地址')
+        if (StringUtil.isEmpty(this.itemValues.province)) {
+          this.showAlert('请选择所在省')
+          return false
+        }
+        if (StringUtil.isEmpty(this.itemValues.city)) {
+          this.showAlert('请选择所在市')
+          return false
+        }
+        if (StringUtil.isEmpty(this.itemValues.customer_address)) {
+          this.showAlert('请输入详细地址')
           return false
         }
         if (!this.itemValues.result_ds && !this.itemValues.result_ds.length > 0) {
           this.showAlert('请选择产品信息')
-          return false
-        }
-        if (StringUtil.isEmpty(this.itemValues.order_quantity)) {
-          this.showAlert('请输入订单数量')
           return false
         }
         if (StringUtil.isEmpty(this.itemValues.receive_type)) {

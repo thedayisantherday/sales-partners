@@ -4,6 +4,7 @@
       <div class="customer-popup-picker-title">
         <label v-if="title" v-html="title"></label>
         <inline-desc v-if="inlineDesc">{{inlineDesc}}</inline-desc>
+        <span v-if="isRequired" class="customer-popup-picker-required">*</span>
       </div>
       <div class="customer-popup-picker-value">
         <span v-if="!displayFormat && !showName && value.length">{{value | array2string}}</span>
@@ -21,7 +22,8 @@
         class="vux-popup-picker"
         :id="'vux-popup-picker-'+uuid"
         @on-hide="onPopupHide"
-        @on-show="$emit('on-show')">
+        @on-show="onPopupShow"
+        :popup-style="popupStyle">
         <div class="vux-popup-picker-container">
           <div class="vux-popup-picker-header">
             <div class="vux-popup-picker-header-menu" @click="onHide(false)">{{cancelText}}</div>
@@ -131,9 +133,10 @@
         type: Boolean,
         default: true
       },
+      popupStyle: Object,
       isRequired: {
         type: Boolean,
-        default: true
+        default: false
       }
     },
     methods: {
@@ -156,6 +159,11 @@
             this.tempValue = getObject(this.currentValue)
           }
         }
+      },
+      onPopupShow () {
+        // reset close type to false
+        this.closeType = false
+        this.$emit('on-show')
       },
       onPopupHide (val) {
         if (this.value.length > 0) {
@@ -181,13 +189,13 @@
     },
     watch: {
       value (val) {
-        if (JSON.stringify(val) !== JSON.stringify(this.tempValue)) {
+        if (JSON.stringify(val) !== JSON.stringify(this.tempValue) && val.length > 0) {
           this.tempValue = getObject(val)
         }
       },
       currentValue (val) {
-        this.$emit('on-change', getObject(val))
         this.$emit('input', getObject(val))
+        this.$emit('on-change', getObject(val))
       },
       show (val) {
         this.showValue = val
@@ -232,6 +240,11 @@
     color: #666;
     width: 30%;
     padding-left: 5%;
+  }
+  .customer-popup-picker-required {
+    color: red;
+    font-size: 0.15rem;
+    vertical-align: middle;
   }
   .customer-popup-picker-value {
     display: inline-block;
