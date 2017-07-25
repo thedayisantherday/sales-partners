@@ -15,12 +15,8 @@
                 <span class="order-detail-item-content">{{itemValues.input_time}}</span>
             </div>
             <div class="order-item">
-                <span class="order-detail-item-title">订单数量</span>
-                <span class="order-detail-item-content">{{itemValues.order_quantity}}</span>
-            </div>
-            <div class="order-item">
                 <span class="order-detail-item-title">客户姓名</span>
-                <span class="order-detail-item-content">{{itemValues.customer_name}}</span>
+                <span class="order-detail-item-content">{{decodeURIComponent(itemValues.customer_name)}}</span>
             </div>
             <div class="order-item">
                 <span class="order-detail-item-title">客户电话</span>
@@ -42,7 +38,7 @@
                 <span class="order-detail-item-title">详细地址</span>
                 <div class="order-detail-address-info">
                     <span class="order-detail-address-item">
-                        {{itemValues.customer_address}}
+                        {{decodeURIComponent(itemValues.customer_address)}}
                     </span>
                 </div>
             </div>
@@ -54,6 +50,10 @@
                         <span>{{item.order_quantity}}</span>
                     </p>
                 </div>
+            </div>
+            <div class="order-item">
+                <span class="order-detail-item-title">订单数量</span>
+                <span class="order-detail-item-content">{{itemValues.order_quantity}}</span>
             </div>
             <div class="order-item">
                 <span class="order-detail-item-title">已收金额</span>
@@ -73,11 +73,11 @@
             </div>
             <div class="order-item">
                 <span class="order-detail-item-title">付款账号</span>
-                <span class="order-detail-item-content">{{itemValues.receive_account}}</span>
+                <span class="order-detail-item-content">{{decodeURIComponent(itemValues.receive_account)}}</span>
             </div>
             <div class="order-item">
                 <span class="order-detail-item-title">微信开单号</span>
-                <span class="order-detail-item-content">{{itemValues.weixin_operator_num}}</span>
+                <span class="order-detail-item-content">{{decodeURIComponent(itemValues.weixin_operator_num)}}</span>
             </div>
             <div class="order-item">
               <span class="order-detail-item-title">订单状态</span>
@@ -89,7 +89,7 @@
             </div>
             <div class="order-item">
                 <span class="order-detail-item-title">备注</span>
-                <span class="order-detail-item-content">{{itemValues.reference}}</span>
+                <span class="order-detail-item-content">{{decodeURIComponent(itemValues.reference)}}</span>
             </div>
         </div>
     </div>

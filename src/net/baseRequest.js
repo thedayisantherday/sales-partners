@@ -25,15 +25,15 @@ class BaseRequest {
     let self = this._self
     // axios网络请求
     // this._self.$ajax.post(this.requestUrl(), QS.stringify(this.params)).then(successCallback, failCallBack)
-    console.log('baseRequest params')
-    console.log(this.params)
+//    console.log('baseRequest params')
+//    console.log(this.params)
     this._self.$ajax({
       method: 'post',
       url: AppConst.WebServerUrl + this.requestUrl(),
       params: this.params
     }).then(function (response) {
       console.log('baseRequest response')
-      console.log(response)
+//      console.log(response)
       if (!response.data.success && (response.data.error.code === 'login_required')) {
         console.log('baseRequest 未登录，跳转登录')
         // 跳转登录
@@ -52,8 +52,8 @@ class BaseRequest {
 
   async startFormData (successCallback, failCallBack) {
     let self = this._self
-    console.log('baseRequest params')
-    console.log(this.params)
+//    console.log('baseRequest params')
+//    console.log(this.params)
     this._self.$ajax({
       method: 'post',
       url: AppConst.WebServerUrl + this.requestUrl(),
@@ -61,7 +61,7 @@ class BaseRequest {
       config: this.config
     }).then(function (response) {
       console.log('baseRequest response')
-      console.log(response)
+//      console.log(response)
       if (response.data && !response.data.success && response.data.error && response.data.error.code === 'login_required') {
         console.log('baseRequest 未登录，跳转登录')
         // 跳转登录

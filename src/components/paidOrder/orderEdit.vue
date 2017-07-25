@@ -20,7 +20,7 @@
           <span>客户电话</span>
           <span class="order-item-required">*</span>
         </p>
-        <input type="tel" class="order-item-content" v-model="itemValues.customer_phone">
+        <input type="number" class="order-item-content" v-model="itemValues.customer_phone">
       </div>
      <!-- <x-address title="客户地址" :data="itemDatas.addressData" v-model="itemValues.customer_address"
                      :rowItemClick="refreshAddress" cancelText="取消" confirmText="确定"></x-address>-->
@@ -373,27 +373,25 @@
             order_type: this.itemValues.order_type[0],
             input_time: this.itemValues.input_time,
             order_quantity: this.itemValues.order_quantity,
-            customer_name: this.itemValues.customer_name,
+            customer_name: encodeURIComponent(this.itemValues.customer_name),
             customer_phone: this.itemValues.customer_phone,
             province: this.itemValues.province[0],
             city: this.itemValues.city[0],
-            customer_address: this.itemValues.customer_address,
+            customer_address: encodeURIComponent(this.itemValues.customer_address),
             result_ds: JSON.stringify(this.itemValues.result_ds),
             down_payment: this.itemValues.down_payment,
             amount: this.itemValues.amount,
             receive_type: this.itemValues.receive_type[0],
-            receive_account: this.itemValues.receive_account,
-            weixin_operator_num: this.itemValues.weixin_operator_num,
+            receive_account: decodeURIComponent(this.itemValues.receive_account),
+            weixin_operator_num: encodeURIComponent(this.itemValues.weixin_operator_num),
             order_state: '06', // this.itemValues.order_state,
             express_type: this.itemValues.express_type[0],
-            reference: this.itemValues.reference
+            reference: encodeURIComponent(this.itemValues.reference)
           }
           new OrderEdit(params).setSelf(self).start(function (response) {
             if (response.data.success && response.data.result && response.data.result.order_id) {
-              console.log(response.data.result.order_id)
               self.orderId = response.data.result.order_id
-//              self.saveAttachment(response.data.result.order_id)
-//              console.log(response.data.result.order_id)
+//              self.saveAttachment(response.data.result.order_id) // 只在调试的时候调用，不调试时不会调用
             } else {
               self.showAlert('订单保存失败，请重新提交！')
             }
