@@ -46,7 +46,7 @@
         </p>
         <input type="number" class="order-item-content product_input" v-model="product.order_quantity">
         <span class="product_btn" @click="addProduct">添加</span>
-        <div class="order-product-detail">
+        <div id="order-product-detail" class="order-product-detail" ref="productDetail">
           <p class="order-product-detail-item" v-for="(item, index) in itemValues.result_ds">
             <span class="order-product-detail-item-delete" @click="deleteProduct(index)"></span>
             <span class="order-product-detail-item-text">{{item.product_name}}</span>
@@ -63,7 +63,7 @@
         <input type="number" class="order-item-content" v-model="itemValues.down_payment">
       </div>
       <div class="order-item">
-        <span class="order-item-title">待收金额</span>
+        <span class="order-item-title">代收金额</span>
         <input type="number" class="order-item-content" v-model="itemValues.amount">
       </div>
       <div class="order-item">
@@ -244,6 +244,12 @@
           product_name: '',
           order_quantity: null
         }
+        // 滑动到底部，需要异步调用才有效果。不用异步存在问题
+        let self = this
+        setTimeout(function () {
+          let productDetail = self.$refs.productDetail
+          productDetail.scrollTop = productDetail.scrollHeight
+        }, 0)
       },
       deleteProduct (index) {
         this.itemValues.result_ds.splice(index, 1)

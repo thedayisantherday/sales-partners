@@ -19,8 +19,8 @@
     name: 'appTab',
     data () {
       return {
-        tabs: ['已收货款', '待收货款', '个人中心'],
-        selected: '待收货款'
+        tabs: ['已收货款', '代收货款', '个人中心'],
+        selected: '代收货款'
       }
     },
     components: {
@@ -30,7 +30,7 @@
       if (this.$route.name === 'paidOrderList') {
         this.selected = '已收货款'
       } else if (this.$route.name === 'unpaidOrderList') {
-        this.selected = '待收货款'
+        this.selected = '代收货款'
       } else if (this.$route.name === 'login') {
         this.selected = '个人中心'
       }
@@ -42,7 +42,7 @@
           this.selected = '已收货款'
         } else if (index === 1) {
           this.$router.replace({name: 'unpaidOrderList'})
-          this.selected = '待收货款'
+          this.selected = '代收货款'
         } else if (index === 2) {
           this.$router.replace({name: 'login'})
           this.selected = '个人中心'

@@ -60,7 +60,7 @@
                 <span class="order-detail-item-content">{{itemValues.down_payment}}</span>
             </div>
             <div class="order-item">
-                <span class="order-detail-item-title">待收金额</span>
+                <span class="order-detail-item-title">代收金额</span>
                 <span class="order-detail-item-content">{{itemValues.amount}}</span>
             </div>
             <div class="order-item">
