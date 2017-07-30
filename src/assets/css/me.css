@@ -35,7 +35,7 @@
    border: none;
    border-radius: 5px;
    outline: none;
-  background-color: #2f9fff;
+   background-color: #2f9fff;
  }
 .login-btn-disable {
   width: 80%;
@@ -44,4 +44,5 @@
   border: none;
   border-radius: 5px;
   outline: none;
+  background-color: #eee;
 }

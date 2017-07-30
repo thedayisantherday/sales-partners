@@ -207,12 +207,19 @@
     watch: {
       'itemValues.input_time': function () {
         var now = new Date()
-        var inputTime = new Date(this.itemValues.input_time)
+        var inputTime = new Date(this.itemValues.input_time.replace(/-/g, '/'))
         if (now < inputTime) {
           this.showAlert('时间不能大于当前时间，请重新选择时间')
           this.itemValues.input_time = ''
         }
-        console.log(inputTime)
+//        console.log(now < inputTime)
+//        console.log(now.getYear() + ':' + now.getMonth() + ':' + now.getDate() + ':' + now.getHours() + ':' + now.getMinutes())
+//        console.log(inputTime.getYear() + ':' + inputTime.getMonth() + ':' + inputTime.getDate() + ':' + inputTime.getHours() + ':' + inputTime.getMinutes())
+//        if (now.getYear() < inputTime.getYear() || now.getMonth() < inputTime.getMonth() ||
+//            now.getDate() < inputTime.getDate() || now.getHours() < inputTime.getHours() || now.getMinutes() < inputTime.getMinutes()) {
+//          this.showAlert('时间不能大于当前时间，请重新选择时间')
+//          this.itemValues.input_time = ''
+//        }
       },
       'itemValues.province': function () {
         this.itemValues.district = []

@@ -11,6 +11,9 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
   baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name])
 })
 
+// 引入插件
+var vConsolePlugin = require('vconsole-webpack-plugin')
+
 module.exports = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
@@ -18,6 +21,9 @@ module.exports = merge(baseWebpackConfig, {
   // cheap-module-eval-source-map is faster for development
   devtool: '#cheap-module-eval-source-map',
   plugins: [
+    new vConsolePlugin({
+      enable: true
+    }),
     new webpack.DefinePlugin({
       'process.env': config.dev.env
     }),
