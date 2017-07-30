@@ -6,6 +6,18 @@
                     v-model="itemValues.order_category" :placeholder="itemPlaceholder" show-name is-required></popup-picker>
       <popup-picker :title="'订单类型'" :data="itemDatas.order_type" :columns="1"
                     v-model="itemValues.order_type" :placeholder="itemPlaceholder" show-name is-required></popup-picker>
+      <div class="order-item">
+        <span class="order-item-title">已收金额</span>
+        <input type="number" class="order-item-content" v-model="itemValues.down_payment">
+      </div>
+      <div class="order-item">
+        <span class="order-item-title">代收金额</span>
+        <input type="number" class="order-item-content" v-model="itemValues.amount">
+      </div>
+      <div class="order-item">
+        <span class="order-edit-item-title">订单总金额 </span>
+        <span class="order-detail-item-content">{{Number(itemValues.amount) + Number(itemValues.down_payment)}}</span>
+      </div>
       <custom-datetime-picker :title="'时间'" format="YYYY-MM-DD HH:mm" v-model="itemValues.input_time"
                               :placeholder="itemPlaceholder" is-required></custom-datetime-picker>
       <div class="order-item">
@@ -58,18 +70,6 @@
         <span class="order-edit-item-title">订单数量</span>
         <span class="order-detail-item-content">{{itemValues.order_quantity}}</span>
       </div>
-      <div class="order-item">
-        <span class="order-item-title">已收金额</span>
-        <input type="number" class="order-item-content" v-model="itemValues.down_payment">
-      </div>
-      <div class="order-item">
-        <span class="order-item-title">代收金额</span>
-        <input type="number" class="order-item-content" v-model="itemValues.amount">
-      </div>
-      <div class="order-item">
-        <span class="order-edit-item-title">订单总金额 </span>
-        <span class="order-detail-item-content">{{Number(itemValues.amount) + Number(itemValues.down_payment)}}</span>
-      </div>
       <popup-picker :title="'付款方式'" :data="itemDatas.receive_type" :columns="1" v-model="itemValues.receive_type"
                     :placeholder="itemPlaceholder" show-name is-required></popup-picker>
       <div class="order-item">
@@ -102,6 +102,10 @@
       </div>-->
       <popup-picker :title="'快递公司'" :data="itemDatas.express_type" :columns="1"
                     v-model="itemValues.express_type" :placeholder="itemPlaceholder" show-name is-required></popup-picker>
+      <div class="order-item">
+        <span class="order-item-title">快递单号</span>
+        <input type="text" class="order-item-content" v-model="itemValues.express_number">
+      </div>
       <div class="order-item">
         <span class="order-item-title">备注</span>
         <input type="text" class="order-item-content" v-model="itemValues.reference">
@@ -168,6 +172,7 @@
           weixin_operator_num: '', // 微信开单号
 //          order_state: '', // 订单状态
           express_type: [], // 快递公司
+          express_number: '', // 快递单号
           reference: '' // 备注
         },
         product: {
@@ -200,6 +205,15 @@
       })
     },
     watch: {
+      'itemValues.input_time': function () {
+        var now = new Date()
+        var inputTime = new Date(this.itemValues.input_time)
+        if (now < inputTime) {
+          this.showAlert('时间不能大于当前时间，请重新选择时间')
+          this.itemValues.input_time = ''
+        }
+        console.log(inputTime)
+      },
       'itemValues.province': function () {
         this.itemValues.district = []
         this.getCities()
@@ -379,20 +393,20 @@
             order_type: this.itemValues.order_type[0],
             input_time: this.itemValues.input_time,
             order_quantity: this.itemValues.order_quantity,
-            customer_name: encodeURIComponent(this.itemValues.customer_name),
+            customer_name: this.itemValues.customer_name,
             customer_phone: this.itemValues.customer_phone,
             province: this.itemValues.province[0],
             city: this.itemValues.city[0],
-            customer_address: encodeURIComponent(this.itemValues.customer_address),
+            customer_address: this.itemValues.customer_address,
             result_ds: JSON.stringify(this.itemValues.result_ds),
             down_payment: this.itemValues.down_payment,
             amount: this.itemValues.amount,
             receive_type: this.itemValues.receive_type[0],
-            receive_account: decodeURIComponent(this.itemValues.receive_account),
-            weixin_operator_num: encodeURIComponent(this.itemValues.weixin_operator_num),
+            receive_account: this.itemValues.receive_account,
+            weixin_operator_num: this.itemValues.weixin_operator_num,
             order_state: '06', // this.itemValues.order_state,
             express_type: this.itemValues.express_type[0],
-            reference: encodeURIComponent(this.itemValues.reference)
+            reference: this.itemValues.reference
           }
           new OrderEdit(params).setSelf(self).start(function (response) {
             if (response.data.success && response.data.result && response.data.result.order_id) {
