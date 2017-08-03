@@ -161,7 +161,7 @@
           province: [], // 省
           city: [], // 市
           district: [], // 所在区
-          customer_address: [], // 详细地址
+          customer_address: '', // 详细地址
           result_ds: [],
           order_quantity: 0,
           down_payment: null, // 已付金额
@@ -476,12 +476,12 @@
         }
       },
       checkItemValue () {
-        if (StringUtil.isEmpty(this.itemValues.order_category)) {
-          this.showAlert('请输入类别')
+        if (!this.itemValues.order_category || this.itemValues.order_category.length <= 0) {
+          this.showAlert('请选择类别')
           return false
         }
-        if (StringUtil.isEmpty(this.itemValues.order_type)) {
-          this.showAlert('请输入类型')
+        if (!this.itemValues.order_type || this.itemValues.order_type.length <= 0) {
+          this.showAlert('请选择类型')
           return false
         }
         if (StringUtil.isEmpty(this.itemValues.input_time)) {
@@ -499,11 +499,11 @@
           this.showAlert('客户电话位数输入有误，请重新输入')
           return false
         }
-        if (StringUtil.isEmpty(this.itemValues.province)) {
+        if (!this.itemValues.province || this.itemValues.province.length <= 0) {
           this.showAlert('请选择所在省')
           return false
         }
-        if (StringUtil.isEmpty(this.itemValues.city)) {
+        if (!this.itemValues.city || this.itemValues.city.length <= 0) {
           this.showAlert('请选择所在市')
           return false
         }
@@ -511,20 +511,20 @@
           this.showAlert('请输入详细地址')
           return false
         }
-        if (!this.itemValues.result_ds && !this.itemValues.result_ds.length > 0) {
-          this.showAlert('请选择产品信息')
+        if (!this.itemValues.result_ds || this.itemValues.result_ds.length <= 0) {
+          this.showAlert('请添加产品信息')
           return false
         }
-        if (StringUtil.isEmpty(this.itemValues.receive_type)) {
-          this.showAlert('请输入收款类型')
+        if (!this.itemValues.receive_type || this.itemValues.receive_type.length <= 0) {
+          this.showAlert('请选择付款方式')
           return false
         }
         if (StringUtil.isEmpty(this.itemValues.weixin_operator_num)) {
           this.showAlert('请输入微信开单号')
           return false
         }
-        if (StringUtil.isEmpty(this.itemValues.express_type)) {
-          this.showAlert('请输入快递公司')
+        if (!this.itemValues.express_type || this.itemValues.express_type.length <= 0) {
+          this.showAlert('请选择快递公司')
           return false
         }
         return true

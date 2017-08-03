@@ -57,7 +57,7 @@
             <div class="order-detail-product">
                 <span class="order-detail-item-title">产品信息</span>
                 <div class="order-detail-product-info">
-                    <p class="order-detail-product-item" v-for="(item, index) in itemValues.result_ds">
+                    <p class="order-detail-product-item" v-for="(item, index) in itemValues.result_ds" @click="test(item)">
                         <span class="order-detail-product-text">{{item.product_name}}</span>
                         <span>{{item.order_quantity}}</span>
                     </p>
@@ -144,6 +144,18 @@
       activated () {
         if (this.$route) {
           this.itemValues = this.$route.params.orderDetail
+          this.itemValues.result_ds = JSON.parse(this.$route.params.orderDetail.result_ds)
+          console.log(this.itemValues.result_ds)
+          for (let i = 0; i < this.itemValues.result_ds.length; i++) {
+            console.log(this.itemValues.result_ds[i])
+          }
+        }
+      },
+      methods: {
+        test (item) {
+          console.log(item)
+          console.log(item.product_name)
+          console.log(item.order_quantity)
         }
       }
     }
